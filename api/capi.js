@@ -25,9 +25,10 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ status: 'error', message: 'Invalid payload' });
     }
 
-    const pixel_id = '3093306007703651'; // Guru Bhai Satta King Pixel ID
+    const pixel_id = '2274453276738646
+'; // Guru Bhai Satta King Pixel ID
     const access_token = 'EAAQOIrZCrH80BSxNMdlG5iq81EIF4cA8xSzEAZBQUtZBzqZBitEW93o7zQe2JX4QtWalJZBSGRLvJH9Ce3we82BCPnsQjTp1BekKwuIaMgnjZCwJNebWgyJ1xbhFYMyDyL1lYEus6m5w4vdrOMhuiFPCmtTuJe5djKsSaG2qJnVZBhhz491QZAvfSnspcSGnUwZDZD'; // Aapka Naya Access Token
-    const test_event_code = ''; // Testing ke liye yahan 'TEST71939' daal sakte hain, live hone par khali chhod dein
+    const test_event_code = ''; // Testing ke liye yahan '' daal sakte hain, live hone par khali chhod dein
 
     const clientIp = req.headers['x-forwarded-for'] ? req.headers['x-forwarded-for'].split(',')[0].trim() : (req.socket.remoteAddress || '');
     const userAgent = req.headers['user-agent'] || '';
