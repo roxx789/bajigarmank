@@ -17,12 +17,12 @@
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
 
-    fbq('init', '1491348686433695');
+    fbq('init', '998971576598992');
     fbq('track', 'PageView');
     </script>
     <noscript>
         <img height="1" width="1" style="display:none" alt=""
-             src="https://www.facebook.com/tr?id=1491348686433695&ev=PageView&noscript=1">
+             src="https://www.facebook.com/tr?id=998971576598992&ev=PageView&noscript=1">
     </noscript>
 
     <style>
@@ -122,7 +122,6 @@
             font-weight: 600;
             margin-bottom: 24px;
         }
-        /* Non-clickable static info cards */
         .info-card-box {
             display: block;
             width: 100%;
@@ -226,7 +225,7 @@
 
         <!-- Redirect Timer Text -->
         <div class="redirect-timer" id="timerText">
-            Redirecting in 28...
+            Redirecting in 3 seconds...
         </div>
 
         <!-- Main Bottom CTA Button -->
@@ -246,7 +245,7 @@
     (function () {
         // ---------- CONFIG ----------
         var INVITE_HASH   = 'zhRMj91gbZg0Mjg1';           // t.me/+ ke baad wala hissa
-        var WEB_LINK      = 'https://t.me/+' + INVITE_HASH;      // fallback
+        var WEB_LINK      = 'https://t.me/+' + INVITE_HASH;       // fallback
         var APP_LINK      = 'tg://join?invite=' + INVITE_HASH;  // seedha Telegram app
         var CAPI_ENDPOINT = '/api/capi';                        // Server endpoint
         var FALLBACK_MS   = 2800; // Mobile OS prompt clash se bachne ke liye safe fallback window (2.8s)
@@ -289,12 +288,18 @@
 
         function sendToServer(eventName, eventId) {
             if (!CAPI_ENDPOINT) return;
+            
+            // subscription_id generate ya extract kar sakte hain (optional parameter as per your schema)
+            var subId = store('subscription_id') || ('sub_' + Date.now());
+            store('subscription_id', subId);
+
             var body = JSON.stringify({
                 event_name: eventName,
                 event_id: eventId,
                 event_source_url: window.location.href,
                 fbp: getCookie('_fbp'),
-                fbc: getFbc()
+                fbc: getFbc(),
+                subscription_id: subId
             });
             try {
                 var blob = new Blob([body], { type: 'application/json' });
@@ -311,14 +316,20 @@
             } catch (e) { /* tracking fail ho to bhi redirect na ruke */ }
         }
 
-        function trackLeadOnce() {
+        function trackSubscribeOnce() {
             var eventId = newEventId();
+            var subId = store('subscription_id') || ('sub_' + Date.now());
+            store('subscription_id', subId);
+
             try {
                 if (typeof fbq === 'function') {
-                    fbq('track', 'Lead', {}, { eventID: eventId });
+                    // Browser Pixel par 'Subscribe' event fire kiya gaya hai
+                    fbq('track', 'Subscribe', {
+                        subscription_id: subId
+                    }, { eventID: eventId });
                 }
             } catch (e) {}
-            sendToServer('Lead', eventId);
+            sendToServer('Subscribe', eventId);
         }
 
         function openTelegram() {
@@ -359,7 +370,7 @@
                 busy = true;
                 btn.classList.add('is-loading');
 
-                trackLeadOnce();
+                trackSubscribeOnce();
 
                 setTimeout(openTelegram, TRACK_DELAY);
 
